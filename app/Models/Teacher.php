@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-use App\Notifications\TeacherResetPassword;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Teacher extends Authenticatable
 {
-    use Notifiable;
-
     protected $table = 'teacher';
     /**
      * The attributes that are mass assignable.

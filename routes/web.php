@@ -32,6 +32,8 @@ Route::group(['prefix'=>'/','middleware'=>'hasLogin'],function(){
 
 Route::group(['prefix'=>'/info','as'=>'info:','middleware'=>'hasLogin'],function(){
     Route::get('/department','InfoController@getDepartment')->name('department');
+    Route::post('/department','InfoController@postDepartment');
+    Route::delete('/department/{id}','InfoController@deleteDepartment');
     Route::get('/speciality','InfoController@getSpeciality')->name('speciality');
     Route::get('/student',function(){
         //return view('index');
