@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        view()->composer('navigation',\App\Http\ViewComposer\Navigation::class);
     }
 
     /**
