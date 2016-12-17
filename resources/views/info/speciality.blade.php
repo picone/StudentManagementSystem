@@ -2,6 +2,11 @@
 @section('content')
     @include('navigation')
     <div class="container">
+        @if(Session::has('message'))
+            <div class="alert alert-danger">
+                {{ Session::get('message') }}
+            </div>
+        @endif
         <div class="col-xs-12">
             <a href="#addSpeciality" class="btn btn-success add" data-toggle="modal">添加专业</a>
             {!! Form::open(['method'=>'get','class'=>'pull-right','role'=>'search']) !!}

@@ -8,7 +8,7 @@
             </div>
         @endif
         <div class="col-xs-12">
-            {!! Html::link('#addStudent','添加学生',['class'=>'btn btn-success add','data-toggle'=>'modal']) !!}
+            {!! Html::link('#addTeacher','添加教师',['class'=>'btn btn-success add','data-toggle'=>'modal']) !!}
             {!! Form::open(['method'=>'get','class'=>'pull-right','role'=>'search']) !!}
             <div class="form-group col-xs-5">
                 {!! Form::select('id',$speciality,request('id'),['class'=>'form-control','placeholder'=>'全部']) !!}
@@ -56,7 +56,7 @@
         </table>
         {!! $student->links() !!}
     </div>
-    <div id="addStudent" class="modal fade" tabindex="-1" role="dialog">
+    <div id="addTeacher" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -107,7 +107,7 @@
             });
             $('.edit').click(function(){
                 let parent=$(this).parents('tr');
-                $('#addStudent').modal('show');
+                $('#addTeacher').modal('show');
                 $(':hidden[name=id]').val(parent.find('td:eq(0)').text());
                 $(':text[name=name]').val(parent.find('td:eq(1)').text());
                 $(':radio[name=sex][value='+parent.find('td:eq(2)').data('sex')+']').prop('checked',true);
