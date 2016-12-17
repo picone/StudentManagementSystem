@@ -10,8 +10,10 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-Route::get('/', function () {
-    //
+Route::group(['prefix'=>'/','middleware'=>'hasLogin'],function(){
+    Route::get('/',function(){
+        return view('index');
+    })->name('index');
 });
 
 Route::group(['prefix'=>'/user','as'=>'user:'],function(){
@@ -24,20 +26,17 @@ Route::group(['prefix'=>'/user','as'=>'user:'],function(){
     })->name('logout');
 });
 
-Route::group(['prefix'=>'/','middleware'=>'hasLogin'],function(){
-    Route::get('/',function(){
-        return view('index');
-    })->name('index');
-});
-
 Route::group(['prefix'=>'/info','as'=>'info:','middleware'=>'hasLogin'],function(){
     Route::get('/department','InfoController@getDepartment')->name('department');
     Route::post('/department','InfoController@postDepartment');
     Route::delete('/department/{id}','InfoController@deleteDepartment');
     Route::get('/speciality','InfoController@getSpeciality')->name('speciality');
-    Route::get('/student',function(){
-        //return view('index');
-    })->name('student');
+    Route::post('/speciality','InfoController@postSpeciality');
+    Route::delete('/speciality/{id}','InfoController@deleteSpeciality');
+    Route::get('/student','InfoController@getStudent')->name('student');
+    Route::post('/student','InfoController@postStudent');
+    Route::delete('/student/{id}','InfoController@deleteStudent');
+
     Route::get('/teacher',function(){
         //return view('index');
     })->name('teacher');

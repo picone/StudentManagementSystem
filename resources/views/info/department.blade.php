@@ -3,7 +3,7 @@
     @include('navigation')
     <div class="container">
         <div class="col-xs-12">
-            <a href="#add-department" class="btn btn-success" data-toggle="modal">添加学院</a>
+            <a href="#add-department" class="btn btn-success add" data-toggle="modal">添加学院</a>
             <form class="pull-right" role="search">
                 <div class="form-group col-xs-9">
                     <input type="text" name="search" value="{{ request()->input('search') }}" placeholder="学院名称或领导人" class="form-control">
@@ -48,7 +48,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">编辑学院</h4>
                 </div>
-                <form method="post">
+                <form method="post" id="editForm">
                     {!! csrf_field() !!}
                     <input type="hidden" name="id" value>
                     <div class="modal-body">
@@ -73,6 +73,10 @@
 @section('js')
     <script>
         $(()=>{
+            $('.add').click(function(){
+                $(':hidden[name=id]').val(0);
+                $('#editForm')[0].reset();
+            });
             $('.edit').click(function(){
                 let parent=$(this).parents('tr');
                 $('#add-department').modal('show');

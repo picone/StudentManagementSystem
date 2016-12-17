@@ -7,7 +7,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{!! route('index') !!}">学生信息管理系统</a>
+                {!! Html::link(route('index'),'学生信息管理系统',['class'=>'navbar-brand']) !!}
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
@@ -30,7 +30,7 @@
                     <li>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ request()->user['name'] }}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{!! URL::route('user:logout') !!}">{{ trans('template.exit') }}</a></li>
+                            <li>{!! Html::link(route('user:logout'),trans('template.exit')) !!}</li>
                         </ul>
                     </li>
                 </ul>

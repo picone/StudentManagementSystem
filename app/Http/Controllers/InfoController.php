@@ -52,12 +52,55 @@ class InfoController
     }
 
     public function getSpeciality(Request $request){
-        $search=$request->input('search');
-        $speciality = Speciality::where(function($query)use($search){
+        $id = intval($request->input('id'));
+        $search = $request->input('search');
+        $speciality = Speciality::where(function($query)use($id, $search){
+            if($id >0){
+                $query->where('department_id',$id);
+            }
             if($search){
                 $query->where('name','like','%'.$search.'%');
             }
         })->get();
-        return view('info.speciality')->with('speciality',$speciality);
+        return view('info.speciality')
+            ->with('department',getModelArray(Department::select('id','name')->get(),'id','name'))
+            ->with('speciality',$speciality);
+    }
+
+    public function postSpeciality(Request $request){
+        $id = $request->input('id');
+        if($id){
+            $speciality = Speciality::find($id);
+            if(!$speciality){
+                return back()->with('message','专业不存在');
+            }
+        }else{
+            $speciality = new Speciality;
+        }
+        $speciality->fill($request->all());
+        $speciality->save();
+        return redirect()->route('info:speciality');
+    }
+
+    public function deleteSpeciality($id){
+        $department = Speciality::find($id);
+        if(!$department){
+            return Json::response(103);
+        }else{
+            $department->delete();
+            return Json::response(1);
+        }
+    }
+
+    public function getStudent(Request $request){
+
+    }
+
+    public function postStudent(Request $request){
+
+    }
+
+    public function deleteStudent($id){
+
     }
 }
