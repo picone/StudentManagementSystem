@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Facades\Json;
 use App\Models\Speciality;
 use App\Models\Department;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class InfoController
@@ -72,7 +73,7 @@ class InfoController
         if($id){
             $speciality = Speciality::find($id);
             if(!$speciality){
-                return back()->with('message','专业不存在');
+                return back()->with('message',trans('response.103'));
             }
         }else{
             $speciality = new Speciality;
@@ -93,14 +94,38 @@ class InfoController
     }
 
     public function getStudent(Request $request){
-
+        $search = $request->input('search');
+        $student = Student::where(function($query)use($search){
+            if ($search){
+                $query->where('name','like','%'.$search.'%');
+            }
+        })->paginate();
+        return view('info.student')->with('student',$student)
+            ->with('speciality',getModelArray(Speciality::all(),['department','name','id'],'name'));
     }
 
     public function postStudent(Request $request){
-
+        $id = $request->input('id');
+        if($id){
+            $student = Student::find($id);
+            if(!$student){
+                return back()->with('message',trans('response.104'));
+            }
+        }else{
+            $student = new Student;
+        }
+        $student->fill($request->all());
+        $student->save();
+        return redirect()->route('info:student');
     }
 
     public function deleteStudent($id){
-
+        $student = Student::find($id);
+        if($student){
+            $student->delete();
+            return Json::response(1);
+        }else{
+            return Json::response(104);
+        }
     }
 }

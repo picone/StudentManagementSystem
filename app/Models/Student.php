@@ -13,7 +13,7 @@ class Student extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'password',
+        'name','sex','birthday','speciality_id', 'password',
     ];
 
     /**
@@ -26,4 +26,8 @@ class Student extends Authenticatable
     ];
 
     public $timestamps = false;
+
+    public function speciality(){
+        return $this->belongsTo('App\Models\Speciality');
+    }
 }

@@ -1,4 +1,4 @@
 <?php
 return [
-    'exit'=>'退出'
+    'exit'=>'退出',
 ];
