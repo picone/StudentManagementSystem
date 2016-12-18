@@ -12,6 +12,7 @@ use App\Facades\Json;
 use App\Models\Speciality;
 use App\Models\Department;
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class InfoController
@@ -94,8 +95,12 @@ class InfoController
     }
 
     public function getStudent(Request $request){
+        $id = intval($request->input('id'));
         $search = $request->input('search');
-        $student = Student::where(function($query)use($search){
+        $student = Student::where(function($query)use($id, $search){
+            if ($id>0){
+                $query->where('speciality_id',$id);
+            }
             if ($search){
                 $query->where('name','like','%'.$search.'%');
             }
@@ -127,5 +132,57 @@ class InfoController
         }else{
             return Json::response(104);
         }
+    }
+
+    public function getTeacher(Request $request){
+        $id = intval($request->input('id'));
+        $search = $request->input('search');
+        $teacher = Teacher::where(function ($query)use($id, $search){
+            if($id>0){
+                $query->where('speciality_id',$id);
+            }
+            if($search){
+                $query->where('name','like','%'.$search.'%');
+            }
+        })->paginate();
+        return view('info.teacher')->with('teacher',$teacher)
+            ->with('speciality',getModelArray(Speciality::all(),['department','name','id'],'name'));
+    }
+
+    public function postTeacher(Request $request){
+        $id = $request->input('id');
+        if($id){
+            $teacher = Teacher::find($id);
+            if(!$teacher){
+                return back()->with('message',trans('response.105'));
+            }
+        }else{
+            $teacher = new Teacher;
+        }
+        $teacher->fill($request->all());
+        $teacher->save();
+        return redirect()->route('info:teacher');
+    }
+
+    public function deleteTeacher($id){
+        $teacher = Teacher::find($id);
+        if($teacher){
+            $teacher->delete();
+            return Json::response(1);
+        }else{
+            return Json::response(105);
+        }
+    }
+
+    public function getCourse(Request $request){
+
+    }
+
+    public function postCourse(Request $request){
+
+    }
+
+    public function deleteCourse($id){
+
     }
 }

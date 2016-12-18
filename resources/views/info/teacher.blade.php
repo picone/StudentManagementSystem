@@ -14,7 +14,7 @@
                 {!! Form::select('id',$speciality,request('id'),['class'=>'form-control','placeholder'=>'全部']) !!}
             </div>
             <div class="form-group col-xs-5">
-                {!! Form::text('search',request('search'),['class'=>'form-control','placeholder'=>'学生名称']) !!}
+                {!! Form::text('search',request('search'),['class'=>'form-control','placeholder'=>'教师名称']) !!}
             </div>
             {!! Form::submit('搜索',['class'=>'btn btn-default col-xs-2']) !!}
             {!! Form::close() !!}
@@ -26,19 +26,21 @@
                 <th>姓名</th>
                 <th>性别</th>
                 <th>出生日期</th>
+                <th>职称</th>
                 <th>学院</th>
                 <th>专业</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            @forelse($student as &$val)
+            @forelse($teacher as &$val)
                 <tr>
                     <td>{{ $val->id }}</td>
                     <td>{{ $val->name }}</td>
                     <td data-sex="{{ $val->sex }}">{{ getSexText($val->sex) }}</td>
                     <td>{{ $val->birthday }}</td>
-                    <td data-id="{{ $val->speciality->department_id }}">{{ $val->speciality->department->name }}</td>
+                    <td data-title="{{ $val->title }}">{{ trans('template.teacher_title.'.$val->title) }}</td>
+                    <td>{{ $val->speciality->department->name }}</td>
                     <td data-id="{{ $val->speciality_id }}">{{ $val->speciality->name }}</td>
                     <td>
                         <button class="btn btn-primary edit">编辑</button>
@@ -48,20 +50,20 @@
             @empty
                 <tr>
                     <td colspan="7">
-                        <div class="alert alert-info">没有学生</div>
+                        <div class="alert alert-info">没有教师</div>
                     </td>
                 </tr>
             @endforelse
             </tbody>
         </table>
-        {!! $student->links() !!}
+        {!! $teacher->links() !!}
     </div>
     <div id="addTeacher" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">编辑学生</h4>
+                    <h4 class="modal-title">编辑教师</h4>
                 </div>
                 {!! Form::open(['id'=>'editForm']) !!}
                 {!! Form::hidden('id') !!}
@@ -81,8 +83,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('birthday','出生日期',['class'=>'control-label']) !!}
+                        {!! Form::label('birthday','出生日期',['class'=>'control-label','max'=>date('Y/m/d')]) !!}
                         {!! Form::date('birthday',null,['class'=>'form-control','required']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('title','职称',['class'=>'control-label']) !!}
+                        {!! Form::select('title',trans('template.teacher_title'),null,['class'=>'form-control']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('speciality_id','专业',['class'=>'control-label']) !!}
@@ -112,7 +118,8 @@
                 $(':text[name=name]').val(parent.find('td:eq(1)').text());
                 $(':radio[name=sex][value='+parent.find('td:eq(2)').data('sex')+']').prop('checked',true);
                 $('input[name=birthday]').val(parent.find('td:eq(3)').text());
-                $('select[name=speciality_id]').val(parent.find('td:eq(5)').data('id'));
+                $('select[name=title]').val(parent.find('td:eq(4)').data('title'));
+                $('select[name=speciality_id]').val(parent.find('td:eq(6)').data('id'));
             });
             $('.delete').click(function(){
                 let parent=$(this).parents('tr');
