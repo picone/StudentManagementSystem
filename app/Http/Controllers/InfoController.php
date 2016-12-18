@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\Json;
+use App\Models\Course;
 use App\Models\Speciality;
 use App\Models\Department;
 use App\Models\Student;
@@ -175,14 +176,46 @@ class InfoController
     }
 
     public function getCourse(Request $request){
-
+        $id = intval($request->input('id'));
+        $search = $request->input('search');
+        $course = Course::where(function($query)use($search){
+            if($search){
+                $query->where('name','like','%'.$search.'%');
+            }
+        });
+        if($id>0){
+            $course = $course->whereHas('teacher.speciality',function($query)use($id){
+                $query->where('id',$id);
+            });
+        }
+        $course = $course->paginate();
+        return view('info.course')->with('course',$course)
+            ->with('speciality',getModelArray(Speciality::all(),['department','name','id'],'name'))
+            ->with('teacher',getModelArray(Teacher::select('id','name')->get(),'id','name'));
     }
 
     public function postCourse(Request $request){
-
+        $id = $request->input('id');
+        if($id){
+            $course = Course::find($id);
+            if(!$course){
+                return back()->with('message',trans('response.106'));
+            }
+        }else{
+            $course = new Course;
+        }
+        $course->fill($request->all());
+        $course->save();
+        return redirect()->route('info:course');
     }
 
     public function deleteCourse($id){
-
+        $course = Course::find($id);
+        if($course){
+            $course->delete();
+            return Json::response(1);
+        }else{
+            return Json::resposne(106);
+        }
     }
 }

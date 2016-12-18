@@ -8,13 +8,13 @@
             </div>
         @endif
         <div class="col-xs-12">
-            {!! Html::link('#addTeacher','添加教师',['class'=>'btn btn-success add','data-toggle'=>'modal']) !!}
+            {!! Html::link('#addCourse','添加课程',['class'=>'btn btn-success add','data-toggle'=>'modal']) !!}
             {!! Form::open(['method'=>'get','class'=>'pull-right','role'=>'search']) !!}
             <div class="form-group col-xs-5">
                 {!! Form::select('id',$speciality,request('id'),['class'=>'form-control','placeholder'=>'全部']) !!}
             </div>
             <div class="form-group col-xs-5">
-                {!! Form::text('search',request('search'),['class'=>'form-control','placeholder'=>'教师名称']) !!}
+                {!! Form::text('search',request('search'),['class'=>'form-control','placeholder'=>'课程名称']) !!}
             </div>
             {!! Form::submit('搜索',['class'=>'btn btn-default col-xs-2']) !!}
             {!! Form::close() !!}
@@ -23,25 +23,23 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>姓名</th>
-                <th>性别</th>
-                <th>出生日期</th>
-                <th>职称</th>
-                <th>学院</th>
-                <th>专业</th>
+                <th>课程名</th>
+                <th>学时</th>
+                <th>学分</th>
+                <th>任课老师</th>
+                <th>所属专业</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            @forelse($teacher as &$val)
+            @forelse($course as &$val)
                 <tr>
                     <td>{{ $val->id }}</td>
                     <td>{{ $val->name }}</td>
-                    <td data-sex="{{ $val->sex }}">{{ getSexText($val->sex) }}</td>
-                    <td>{{ $val->birthday }}</td>
-                    <td data-title="{{ $val->title }}">{{ trans('template.teacher_title.'.$val->title) }}</td>
-                    <td>{{ $val->speciality->department->name }}</td>
-                    <td data-id="{{ $val->speciality_id }}">{{ $val->speciality->name }}</td>
+                    <td>{{ $val->hour }}</td>
+                    <td>{{ $val->credit }}</td>
+                    <td data-id="{{ $val->teacher_id }}">{{ $val->teacher->name }}</td>
+                    <td>{{ $val->teacher->speciality->name }}</td>
                     <td>
                         <button class="btn btn-primary edit">编辑</button>
                         <button class="btn btn-danger delete">删除</button>
@@ -50,49 +48,39 @@
             @empty
                 <tr>
                     <td colspan="7">
-                        <div class="alert alert-info">没有教师</div>
+                        <div class="alert alert-info">没有课程</div>
                     </td>
                 </tr>
             @endforelse
             </tbody>
         </table>
-        {!! $teacher->links() !!}
+        {!! $course->links() !!}
     </div>
-    <div id="addTeacher" class="modal fade" tabindex="-1" role="dialog">
+    <div id="addCourse" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">编辑教师</h4>
+                    <h4 class="modal-title">编辑课程</h4>
                 </div>
                 {!! Form::open(['id'=>'editForm']) !!}
                 {!! Form::hidden('id') !!}
                 <div class="modal-body">
                     <div class="form-group">
-                        {!! Form::label('name','姓名',['class'=>'control-label']) !!}
+                        {!! Form::label('name','课程名',['class'=>'control-label']) !!}
                         {!! Form::text('name','',['class'=>'form-control','required']) !!}
                     </div>
                     <div class="form-group">
-                        <div class="row">
-                            <label class="checkbox-inline">
-                                {!! Form::radio('sex',1,true) !!}{!! Html::nbsp() !!}男
-                            </label>
-                            <label class="checkbox-inline">
-                                {!! Form::radio('sex',2) !!}{!! Html::nbsp() !!}女
-                            </label>
-                        </div>
+                        {!! Form::label('hour','学时',['class'=>'control-label']) !!}
+                        {!! Form::number('hour','',['min'=>1,'class'=>'form-control','required']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('birthday','出生日期',['class'=>'control-label','max'=>date('Y/m/d')]) !!}
-                        {!! Form::date('birthday',null,['class'=>'form-control','required']) !!}
+                        {!! Form::label('credit','学分',['class'=>'control-label']) !!}
+                        {!! Form::number('credit','',['min'=>1,'class'=>'form-control','required']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('title','职称',['class'=>'control-label']) !!}
-                        {!! Form::select('title',trans('template.teacher_title'),null,['class'=>'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('speciality_id','专业',['class'=>'control-label']) !!}
-                        {!! Form::select('speciality_id',$speciality,null,['class'=>'form-control']) !!}
+                        {!! Form::label('teacher_id','任课老师',['class'=>'control-label']) !!}
+                        {!! Form::select('teacher_id',$teacher,null,['class'=>'form-control']) !!}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -113,17 +101,16 @@
             });
             $('.edit').click(function(){
                 let parent=$(this).parents('tr');
-                $('#addTeacher').modal('show');
+                $('#addCourse').modal('show');
                 $(':hidden[name=id]').val(parent.find('td:eq(0)').text());
                 $(':text[name=name]').val(parent.find('td:eq(1)').text());
-                $(':radio[name=sex][value='+parent.find('td:eq(2)').data('sex')+']').prop('checked',true);
-                $('input[name=birthday]').val(parent.find('td:eq(3)').text());
-                $('select[name=title]').val(parent.find('td:eq(4)').data('title'));
-                $('select[name=speciality_id]').val(parent.find('td:eq(6)').data('id'));
+                $('input[name=hour]').val(parent.find('td:eq(2)').text());
+                $('input[name=credit]').val(parent.find('td:eq(3)').text());
+                $('select[name=teacher_id]').val(parent.find('td:eq(4)').data('id'));
             });
             $('.delete').click(function(){
                 let parent=$(this).parents('tr');
-                confirmDialog('您确定要删除教师'+parent.find('td:eq(1)').text()+'？',function(res){
+                confirmDialog('您确定要删除课程'+parent.find('td:eq(1)').text()+'？',function(res){
                     if(res){
                         $.ajax({
                             url:location.pathname+'/'+parent.find('td:eq(0)').text(),

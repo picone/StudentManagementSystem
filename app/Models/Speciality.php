@@ -22,4 +22,8 @@ class Speciality extends Model
     public function department(){
         return $this->belongsTo('App\Models\Department');
     }
+
+    public function teachers(){
+        return $this->hasMany('App\Models\Teacher','speciality_id','id');
+    }
 }

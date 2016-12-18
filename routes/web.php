@@ -39,8 +39,7 @@ Route::group(['prefix'=>'/info','as'=>'info:','middleware'=>'hasLogin'],function
     Route::get('/teacher','InfoController@getTeacher')->name('teacher');
     Route::post('/teacher','InfoController@postTeacher');
     Route::delete('/teacher/{id}','InfoController@deleteTeacher');
-
-    Route::get('/course',function(){
-        //return view('index');
-    })->name('course');
+    Route::get('/course','InfoController@getCourse')->name('course');
+    Route::post('/course','InfoController@postCourse');
+    Route::delete('/course/{id}','InfoController@deleteCourse');
 });
