@@ -9,27 +9,31 @@
 namespace App\Http\ViewComposer;
 
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class Navigation
 {
-    protected $navigation=[];
+    protected $navigation = [];
+
+    public function __construct(){
+        $this->navigation = session('navigation');
+    }
 
     public function compose(View $view){
+        if(!$this->navigation||env('APP_DEBUG')){
+            $this->navigation['info']['title']=trans('navigation.info');
+            foreach (['department','speciality','student','teacher','course'] as $item){
+                if(Gate::forUser(request()->user)->allows('management','App\Models\\'.ucfirst($item))){
+                    $this->navigation['info']['children'][$item]=[
+                        'title'=>trans('navigation.info_'.$item),
+                        'url'=>route('info:'.$item)
+                    ];
+                }
+            }
 
-        $this->navigation['info']=[
-            'title'=>trans('navigation.info'),
-            'children'=>[
-                'department'=>['title'=>trans('navigation.info_department'),'url'=>route('info:department')],
-                'speciality'=>['title'=>trans('navigation.info_speciality'),'url'=>route('info:speciality')],
-                'student'=>['title'=>trans('navigation.info_student'),'url'=>route('info:student')],
-                'teacher'=>['title'=>trans('navigation.info_teacher'),'url'=>route('info:teacher')],
-                'course'=>['title'=>trans('navigation.info_course'),'url'=>route('info:course')],
-            ]
-        ];
-
-
-
+            session(['navigation'=>$this->navigation]);
+        }
         $view->with('navigation',$this->navigation);
     }
 }

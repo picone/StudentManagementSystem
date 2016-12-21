@@ -15,10 +15,12 @@ use App\Models\Department;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
-class InfoController
+class InfoController extends Controller
 {
     public function getDepartment(Request $request){
+        $this->authorizeForUser($request->user,'management',Department::class);
         $search=$request->input('search');
         $department = Department::where(function($query)use($search){
             if($search){
@@ -30,6 +32,7 @@ class InfoController
     }
 
     public function postDepartment(Request $request){
+        $this->authorizeForUser($request->user,'management',Department::class);
         $id = $request->input('id');
         if($id){
             $department = Department::find($id);
@@ -45,6 +48,7 @@ class InfoController
     }
 
     public function deleteDepartment($id){
+        $this->authorizeForUser(request()->user,'management',Department::class);
         $department = Department::find($id);
         if(!$department){
             return Json::response(102);
@@ -55,6 +59,7 @@ class InfoController
     }
 
     public function getSpeciality(Request $request){
+        $this->authorizeForUser($request->user,'management',Speciality::class);
         $id = intval($request->input('id'));
         $search = $request->input('search');
         $speciality = Speciality::where(function($query)use($id, $search){
@@ -71,6 +76,7 @@ class InfoController
     }
 
     public function postSpeciality(Request $request){
+        $this->authorizeForUser($request->user,'management',Speciality::class);
         $id = $request->input('id');
         if($id){
             $speciality = Speciality::find($id);
@@ -86,6 +92,7 @@ class InfoController
     }
 
     public function deleteSpeciality($id){
+        $this->authorizeForUser(request()->user,'management',Speciality::class);
         $department = Speciality::find($id);
         if(!$department){
             return Json::response(103);
@@ -96,6 +103,7 @@ class InfoController
     }
 
     public function getStudent(Request $request){
+        $this->authorizeForUser($request->user,'management',Student::class);
         $id = intval($request->input('id'));
         $search = $request->input('search');
         $student = Student::where(function($query)use($id, $search){
@@ -111,6 +119,7 @@ class InfoController
     }
 
     public function postStudent(Request $request){
+        $this->authorizeForUser($request->user,'management',Student::class);
         $id = $request->input('id');
         if($id){
             $student = Student::find($id);
@@ -119,6 +128,7 @@ class InfoController
             }
         }else{
             $student = new Student;
+            $student->password = Hash::make('123456');
         }
         $student->fill($request->all());
         $student->save();
@@ -126,6 +136,7 @@ class InfoController
     }
 
     public function deleteStudent($id){
+        $this->authorizeForUser(request()->user,'management',Student::class);
         $student = Student::find($id);
         if($student){
             $student->delete();
@@ -135,7 +146,12 @@ class InfoController
         }
     }
 
+    public function resetStudentPassword(){
+
+    }
+
     public function getTeacher(Request $request){
+        $this->authorizeForUser($request->user,'management',Teacher::class);
         $id = intval($request->input('id'));
         $search = $request->input('search');
         $teacher = Teacher::where(function ($query)use($id, $search){
@@ -151,6 +167,7 @@ class InfoController
     }
 
     public function postTeacher(Request $request){
+        $this->authorizeForUser($request->user,'management',Teacher::class);
         $id = $request->input('id');
         if($id){
             $teacher = Teacher::find($id);
@@ -159,6 +176,7 @@ class InfoController
             }
         }else{
             $teacher = new Teacher;
+            $teacher->password = Hash::make('123456');
         }
         $teacher->fill($request->all());
         $teacher->save();
@@ -166,6 +184,7 @@ class InfoController
     }
 
     public function deleteTeacher($id){
+        $this->authorizeForUser(request()->user,'management',Teacher::class);
         $teacher = Teacher::find($id);
         if($teacher){
             $teacher->delete();
@@ -176,6 +195,7 @@ class InfoController
     }
 
     public function getCourse(Request $request){
+        $this->authorizeForUser(request()->user,'management',Course::class);
         $id = intval($request->input('id'));
         $search = $request->input('search');
         $course = Course::where(function($query)use($search){
@@ -195,6 +215,7 @@ class InfoController
     }
 
     public function postCourse(Request $request){
+        $this->authorizeForUser($request->user,'management',Course::class);
         $id = $request->input('id');
         if($id){
             $course = Course::find($id);
@@ -210,6 +231,7 @@ class InfoController
     }
 
     public function deleteCourse($id){
+        $this->authorizeForUser(request()->user,'management',Course::class);
         $course = Course::find($id);
         if($course){
             $course->delete();
