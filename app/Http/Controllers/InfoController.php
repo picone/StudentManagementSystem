@@ -146,8 +146,16 @@ class InfoController extends Controller
         }
     }
 
-    public function resetStudentPassword(){
-
+    public function resetStudentPassword(Request $request){
+        $student = Student::find($request->input('id'));
+        if($student){
+            $this->authorizeForUser($request->user,'resetPassword',$student);
+            $student->password = Hash::make($request->input('password'));
+            $student->save();
+            return back()->with('message',trans('response.1'));
+        }else{
+            return back()->with('message',trans('response.104'));
+        }
     }
 
     public function getTeacher(Request $request){

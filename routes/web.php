@@ -36,6 +36,7 @@ Route::group(['prefix'=>'/info','as'=>'info:','middleware'=>'hasLogin'],function
     Route::get('/student','InfoController@getStudent')->name('student');
     Route::post('/student','InfoController@postStudent');
     Route::delete('/student/{id}','InfoController@deleteStudent');
+    Route::put('/student','InfoController@resetStudentPassword');
     Route::get('/teacher','InfoController@getTeacher')->name('teacher');
     Route::post('/teacher','InfoController@postTeacher');
     Route::delete('/teacher/{id}','InfoController@deleteTeacher');
