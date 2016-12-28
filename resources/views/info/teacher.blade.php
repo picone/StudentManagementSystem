@@ -44,6 +44,7 @@
                     <td data-id="{{ $val->speciality_id }}">{{ $val->speciality->name }}</td>
                     <td>
                         <button class="btn btn-primary edit">编辑</button>
+                        <button data-id="{{ $val->id }}" class="btn btn-default password">重置密码</button>
                         <button class="btn btn-danger delete">删除</button>
                     </td>
                 </tr>
@@ -103,6 +104,27 @@
             </div>
         </div>
     </div>
+    <div id="resetPassword" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">重置密码</h4>
+                </div>
+                {!! Form::open(['method'=>'put']) !!}
+                {!! Form::hidden('id') !!}
+                <div class="modal-body">
+                    {!! Form::label('password','密码',['class'=>'control-label']) !!}
+                    {!! Form::password('password',['class'=>'form-control','required']) !!}
+                </div>
+                <div class="modal-footer">
+                    {!! Form::submit('修改',['class'=>'btn btn-success']) !!}
+                    <button type="button" class="btn" data-dismiss="modal">关闭</button>
+                </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @stop
 @section('js')
     <script>
@@ -137,6 +159,11 @@
                         });
                     }
                 });
+            });
+            $('.password').click(function(){
+                let modal=$('#resetPassword');
+                modal.modal('show');
+                modal.find(':hidden[name=id]').val($(this).data('id'));
             });
         });
     </script>

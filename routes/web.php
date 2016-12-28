@@ -40,7 +40,12 @@ Route::group(['prefix'=>'/info','as'=>'info:','middleware'=>'hasLogin'],function
     Route::get('/teacher','InfoController@getTeacher')->name('teacher');
     Route::post('/teacher','InfoController@postTeacher');
     Route::delete('/teacher/{id}','InfoController@deleteTeacher');
+    Route::put('/teacher','InfoController@resetTeacherPassword');
     Route::get('/course','InfoController@getCourse')->name('course');
     Route::post('/course','InfoController@postCourse');
     Route::delete('/course/{id}','InfoController@deleteCourse');
+});
+
+Route::group(['prefix'=>'/student','as'=>'student:','middleware'=>'hasLogin'],function(){
+
 });

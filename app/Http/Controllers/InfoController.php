@@ -202,6 +202,18 @@ class InfoController extends Controller
         }
     }
 
+    public function resetTeacherPassword(Request $request){
+        $teacher = Teacher::find($request->input('id'));
+        if($teacher){
+            $this->authorizeForUser($request->user,'resetPassword',$teacher);
+            $teacher->password = Hash::make($request->input('password'));
+            $teacher->save();
+            return back()->with('message',trans('response.1'));
+        }else{
+            return back()->with('message',trans('response.105'));
+        }
+    }
+
     public function getCourse(Request $request){
         $this->authorizeForUser(request()->user,'management',Course::class);
         $id = intval($request->input('id'));
