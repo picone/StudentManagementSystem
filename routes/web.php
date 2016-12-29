@@ -62,6 +62,7 @@ Route::group(['prefix'=>'/course','as'=>'course:','middleware'=>'hasLogin'],func
 Route::group(['prefix'=>'/teacher','as'=>'teacher:','middleware'=>'hasLogin'],function(){
     Route::get('/course','TeacherController@getCourse')->name('course');
     Route::post('/course','TeacherController@postScore');
+    Route::get('/score/{id?}','TeacherController@getScore')->name('score');
 });
 
 Route::group(['prefix'=>'/student','as'=>'student:','middleware'=>'hasLogin'],function(){

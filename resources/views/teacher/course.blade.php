@@ -52,7 +52,11 @@
                                         @endif
                                     </td>
                                     <td><span class="score">{{ $score->score }}</span></td>
-                                    <td><button class="btn btn-success save" data-course="{{ $score->course_id }}" data-id="{{ $score->student_id }}">保存</button></td>
+                                    <td>
+                                        @if(!$score->score)
+                                            <button class="btn btn-success save" data-course="{{ $score->course_id }}" data-id="{{ $score->student_id }}">保存</button>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

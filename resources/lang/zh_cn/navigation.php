@@ -11,4 +11,5 @@ return [
     'course_management'=>'已选管理',
     'teacher'=>'教师课程',
     'student'=>'学生课程',
+    'score'=>'成绩报表'
 ];

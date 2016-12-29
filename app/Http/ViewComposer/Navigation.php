@@ -51,6 +51,10 @@ class Navigation
                     'title' => trans('navigation.teacher'),
                     'url' => route('teacher:course')
                 ];
+                $this->navigation['score'] = [
+                    'title' => trans('navigation.score'),
+                    'url' => route('teacher:score')
+                ];
             }
 
             if(Gate::forUser(request()->user)->allows('course',Student::class)){

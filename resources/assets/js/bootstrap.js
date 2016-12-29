@@ -45,3 +45,4 @@ require('bootstrap');
 // });
 
 window.BootstrapDialog=require('bootstrap-dialog');
+require('chart.js');
