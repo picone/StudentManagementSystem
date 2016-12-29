@@ -46,6 +46,9 @@ Route::group(['prefix'=>'/info','as'=>'info:','middleware'=>'hasLogin'],function
     Route::delete('/course/{id}','InfoController@deleteCourse');
 });
 
-Route::group(['prefix'=>'/student','as'=>'student:','middleware'=>'hasLogin'],function(){
-
+Route::group(['prefix'=>'/course','as'=>'course:','middleware'=>'hasLogin'],function(){
+    Route::get('/choose','CourseController@getChoose')->name('choose');
+    Route::get('/student','CourseController@getStudent')->name('student');
+    Route::post('/choose','CourseController@postChoose');
+    Route::get('/management','CourseController@getManagement')->name('management');
 });

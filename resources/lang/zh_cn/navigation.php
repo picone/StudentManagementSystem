@@ -6,4 +6,7 @@ return [
     'info_student'=>'学生管理',
     'info_teacher'=>'教师管理',
     'info_course'=>'课程管理',
+    'course'=>'选课管理',
+    'course_choose'=>'批量选课',
+    'course_management'=>'已选管理'
 ];

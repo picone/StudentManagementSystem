@@ -9,6 +9,7 @@
 namespace App\Http\ViewComposer;
 
 
+use App\Models\Course;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -17,7 +18,7 @@ class Navigation
     protected $navigation = [];
 
     public function __construct(){
-        $this->navigation = session('navigation');
+        //$this->navigation = session('navigation');
     }
 
     public function compose(View $view){
@@ -31,7 +32,17 @@ class Navigation
                     ];
                 }
             }
+            if(count($this->navigation['info']['children'])==0)unset($this->navigation['info']);
 
+            if(Gate::forUser(request()->user)->allows('management',Course::class)){
+                $this->navigation['course']['title'] = trans('navigation.course');
+                foreach(['choose','management'] as $item){
+                    $this->navigation['course']['children'][$item]=[
+                        'title'=>trans('navigation.course_'.$item),
+                        'url'=>route('course:'.$item)
+                    ];
+                }
+            }
             session(['navigation'=>$this->navigation]);
         }
         $view->with('navigation',$this->navigation);
