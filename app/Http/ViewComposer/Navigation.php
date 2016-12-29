@@ -10,6 +10,7 @@ namespace App\Http\ViewComposer;
 
 
 use App\Models\Course;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -32,7 +33,7 @@ class Navigation
                     ];
                 }
             }
-            if(count($this->navigation['info']['children'])==0)unset($this->navigation['info']);
+            if(!isset($this->navigation['info']['children']))unset($this->navigation['info']);
 
             if(Gate::forUser(request()->user)->allows('management',Course::class)){
                 $this->navigation['course']['title'] = trans('navigation.course');
@@ -42,6 +43,13 @@ class Navigation
                         'url'=>route('course:'.$item)
                     ];
                 }
+            }
+
+            if(Gate::forUser(request()->user)->allows('course',Teacher::class)){
+                $this->navigation['teacher'] = [
+                    'title' => trans('navigation.teacher'),
+                    'url' => route('teacher:course')
+                ];
             }
             session(['navigation'=>$this->navigation]);
         }

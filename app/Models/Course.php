@@ -23,4 +23,8 @@ class Course extends Model
     public function teacher(){
         return $this->belongsTo('App\Models\Teacher');
     }
+
+    public function scores(){
+        return $this->hasMany('App\Models\Score');
+    }
 }
