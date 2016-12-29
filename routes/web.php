@@ -63,3 +63,7 @@ Route::group(['prefix'=>'/teacher','as'=>'teacher:','middleware'=>'hasLogin'],fu
     Route::get('/course','TeacherController@getCourse')->name('course');
     Route::post('/course','TeacherController@postScore');
 });
+
+Route::group(['prefix'=>'/student','as'=>'student:','middleware'=>'hasLogin'],function(){
+    Route::get('/course/{order?}','StudentController@getCourse')->name('course');
+});

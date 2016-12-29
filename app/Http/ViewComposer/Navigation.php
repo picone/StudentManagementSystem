@@ -10,6 +10,7 @@ namespace App\Http\ViewComposer;
 
 
 use App\Models\Course;
+use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -51,6 +52,14 @@ class Navigation
                     'url' => route('teacher:course')
                 ];
             }
+
+            if(Gate::forUser(request()->user)->allows('course',Student::class)){
+                $this->navigation['student'] = [
+                    'title' => trans('navigation.student'),
+                    'url' => route('student:course')
+                ];
+            }
+
             session(['navigation'=>$this->navigation]);
         }
         $view->with('navigation',$this->navigation);

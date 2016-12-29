@@ -22,4 +22,8 @@ class StudentPolicy
         return $user instanceof Admin ||
             ($user instanceof Student && $user->id=$data->id);
     }
+
+    public function course($user){
+        return $user instanceof Student;
+    }
 }
