@@ -10,6 +10,10 @@
 | to using a Closure or controller method. Build something great!
 |
 */
+use Illuminate\Contracts\Auth\Guard;
+
+Route::pattern('id','\d+');
+
 Route::group(['prefix'=>'/','middleware'=>'hasLogin'],function(){
     Route::get('/',function(){
         return view('index');
@@ -22,7 +26,8 @@ Route::group(['prefix'=>'/user','as'=>'user:'],function(){
     })->name('login');
     Route::post('/login','UserController@login');
     Route::get('/logout',function(){
-        Auth::logout();
+        Auth::guard(request()->guard_name)->logout();
+        return redirect()->route('user:login');
     })->name('logout');
 });
 
@@ -51,4 +56,9 @@ Route::group(['prefix'=>'/course','as'=>'course:','middleware'=>'hasLogin'],func
     Route::get('/student','CourseController@getStudent')->name('student');
     Route::post('/choose','CourseController@postChoose');
     Route::get('/management','CourseController@getManagement')->name('management');
+    Route::get('/management/{student_id}/{course_id}','CourseController@dismissStudent')->name('dismiss');
+});
+
+Route::group(['prefix'=>'/teacher','as'=>'teacher:','middleware'=>'hasLogin'],function(){
+
 });

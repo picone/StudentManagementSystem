@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 
 use App\Facades\Json;
 use App\Models\Course;
+use App\Models\Score;
 use App\Models\Speciality;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -51,6 +52,27 @@ class CourseController extends Controller
     }
 
     public function getManagement(){
+        $score = Score::whereHas('student',function($query){
+            $name = request('name');
+            if($name){
+                $query->where('name','like','%'.$name.'%');
+            }
+        })->paginate();
+        return view('course.management')
+            ->with('score',$score);
+    }
 
+    public function dismissStudent($student_id,$course_id){
+        $where = [
+            'student_id'=>$student_id,
+            'course_id'=>$course_id
+        ];
+        $score = Score::where($where)->first();
+        if($score){
+            Score::where($where)->delete();
+            return back()->with('message','成功');
+        }else{
+            return back()->with('message','不存在');
+        }
     }
 }

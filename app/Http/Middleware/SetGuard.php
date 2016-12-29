@@ -19,6 +19,7 @@ class SetGuard
         $user = null;
         foreach(['admin','teacher','student'] as $guard){
             $user = Auth::guard($guard)->user();
+            $request->guard_name= $guard;
             if($user)break;
         }
         $request->user=$user;
